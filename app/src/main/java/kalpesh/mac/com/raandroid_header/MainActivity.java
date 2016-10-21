@@ -38,6 +38,7 @@ public class MainActivity extends ListActivity {
      * Subscription that represents a group of Subscriptions that are unsubscribed together.
      */
     private CompositeSubscription _subscriptions = new CompositeSubscription();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +46,12 @@ public class MainActivity extends ListActivity {
 /**
  * Retrofit 1.9
  */
-       _api= Services._createRestruentshubApi();
+        _api = Services._createRestruentshubApi();
 
         /**
          * Retrofit 2.0
          */
-       // _api = Services.getClient();
+        // _api = Services.getClient();
 
         pDialog = new ProgressDialog(this);
         // Showing progress dialog before making http request
@@ -61,6 +62,7 @@ public class MainActivity extends ListActivity {
         pattern();
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -72,19 +74,22 @@ public class MainActivity extends ListActivity {
         super.onPause();
         RxUtils.unsubscribeIfNotNull(_subscriptions);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
     private void hidePDialog() {
         if (pDialog != null) {
             pDialog.dismiss();
             pDialog = null;
         }
     }
-    public void pattern(){
+
+    public void pattern() {
 
         _subscriptions.add(_api.getRestraurent()
 //http://docs.couchbase.com/developer/java-2.0/observables.html
@@ -93,13 +98,13 @@ public class MainActivity extends ListActivity {
                     @Override
                     public Observable<? extends Example> call(Throwable throwable) {
                         Toast.makeText(getBaseContext(), "Error ", Toast.LENGTH_SHORT).show();
-                        Log.i("ERROR RX","NO MSG" );
+                        Log.i("ERROR RX", "NO MSG");
                         return Observable.error(throwable);
                     }
                 })
 
-                          .retry()
-                         .distinct()
+                .retry()
+                .distinct()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Example>() {
@@ -118,7 +123,7 @@ public class MainActivity extends ListActivity {
                         mRestaurantList = example.getRestaurants();
                         System.out.println("Got: " + " (" + Thread.currentThread().getName() + ")");
                         Adapter adapt = new Adapter(getApplicationContext(), R.layout.row, mRestaurantList);
-                          Log.i("DATA IS", "" +mRestaurantList);
+                        Log.i("DATA IS", "" + mRestaurantList);
                         setListAdapter(adapt);
                     }
                 }));
