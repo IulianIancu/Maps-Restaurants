@@ -111,6 +111,14 @@ public class MainActivity extends ListActivity implements
                 startIntentService();
             }
         });
+        maps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mRestaurantList!=null){
+                    Intent maps = new Intent(MainActivity.this, MapsActivity.class);
+                    startActivity(maps);}
+            }
+        });
 
     }
 
