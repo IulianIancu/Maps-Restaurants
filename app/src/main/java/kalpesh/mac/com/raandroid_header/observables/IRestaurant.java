@@ -4,6 +4,8 @@ import kalpesh.mac.com.raandroid_header.model.Embedded;
 import kalpesh.mac.com.raandroid_header.model.Example;
 import retrofit.http.GET;
 import retrofit.http.Headers;
+import retrofit.http.Path;
+import retrofit.http.Query;
 import rx.Observable;
 
 //import retrofit.http.GET;
@@ -23,8 +25,8 @@ public interface IRestaurant {
             "Authorization: Basic VGVjaFRlc3RBUEk6dXNlcjI=",
             "Host: public.je-apis.com"
     })
-    @GET("/restaurants?q=E14")
-    Observable<Example> getRestraurent();
+    @GET("/restaurants")
+    Observable<Example> getRestraurent(@Query("q") String pcode);
 
 
 

@@ -7,6 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.List;
@@ -33,6 +36,9 @@ public class MainActivity extends ListActivity {
     private RecyclerView mRecyclerView;
     private Adapter mAdapter;
     private ProgressDialog pDialog;
+    private String pcode ="E14";
+    private EditText search;
+    private ImageButton go;
 
     /**
      * Subscription that represents a group of Subscriptions that are unsubscribed together.
@@ -43,6 +49,8 @@ public class MainActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        search =(EditText) findViewById(R.id.search_bar);
+        go =(ImageButton) findViewById(R.id.go);
 /**
  * Retrofit 1.9
  */
@@ -53,14 +61,20 @@ public class MainActivity extends ListActivity {
          */
         // _api = Services.getClient();
 
-        pDialog = new ProgressDialog(this);
-        // Showing progress dialog before making http request
-        pDialog.setMessage("Loading...");
-        pDialog.show();
 
 
-        pattern();
 
+//        pattern();
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pDialog = new ProgressDialog(MainActivity.this);
+                // Showing progress dialog before making http request
+                pDialog.setMessage("Loading...");
+                pDialog.show();
+                pattern();
+            }
+        });
     }
 
     @Override
@@ -90,8 +104,14 @@ public class MainActivity extends ListActivity {
     }
 
     public void pattern() {
-
-        _subscriptions.add(_api.getRestraurent()
+        String temp ="W30HU";
+        Log.e("HYAAA",search.getText().toString());
+        if(search.getText().toString().equals(""))Log.i("E14",temp);
+        else {
+            Log.i("Whaaaaaat?",search.getText().toString());
+            temp= search.getText().toString();
+        }
+        _subscriptions.add(_api.getRestraurent(temp)
 //http://docs.couchbase.com/developer/java-2.0/observables.html
                 .timeout(5000, TimeUnit.MILLISECONDS)
                 .onErrorResumeNext(new Func1<Throwable, Observable<? extends Example>>() {
@@ -103,7 +123,7 @@ public class MainActivity extends ListActivity {
                     }
                 })
 
-                .retry()
+//                .retry(5)
                 .distinct()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
