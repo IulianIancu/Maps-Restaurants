@@ -6,8 +6,10 @@ package kalpesh.mac.com.raandroid_header.model;
 
 import com.google.gson.annotations.Expose;
 
+import java.io.Serializable;
 
-public class Logo {
+
+public class Logo implements Serializable{
 
     @Expose
     private String StandardResolutionURL;

@@ -20,7 +20,7 @@ import kalpesh.mac.com.raandroid_header.model.Restaurant;
 /**
  * Created by kalpesh on 04/09/2015.
  */
-public class Adapter extends ArrayAdapter<Restaurant> {
+public class Adapter extends ArrayAdapter<Restaurant>  {
 
     //String url="https://gist.githubusercontent.com/hart88/198f29ec5114a3ec3460/raw/8dd19a88f9b8d24c23d9960f3300d0c917a4f07c/";
     private Context context;
@@ -66,4 +66,5 @@ public class Adapter extends ArrayAdapter<Restaurant> {
 
         return view;
     }
+
 }

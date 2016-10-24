@@ -3,13 +3,15 @@ package kalpesh.mac.com.raandroid_header.model;
 /**
  * Created by kalpesh on 05/09/2015.
  */
+
 import com.google.gson.annotations.Expose;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Restaurant {
+public class Restaurant implements Serializable {
 
     @Expose
     private Integer Id;
@@ -21,6 +23,10 @@ public class Restaurant {
     private String Postcode;
     @Expose
     private String City;
+    @Expose
+    private Double Latitude;
+    @Expose
+    private Double Longitude;
     @Expose
     private List<CuisineType> CuisineTypes = new ArrayList<CuisineType>();
     @Expose
@@ -362,5 +368,21 @@ public class Restaurant {
      */
     public void setNumberOfRatings(Integer NumberOfRatings) {
         this.NumberOfRatings = NumberOfRatings;
+    }
+
+    public double getLatitude() {
+        return Latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        Latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return Longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        Longitude = longitude;
     }
 }

@@ -13,6 +13,11 @@ import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,16 +25,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import kalpesh.mac.com.raandroid_header.adapter.Adapter;
+import kalpesh.mac.com.raandroid_header.adapter.RecyAdapter;
 import kalpesh.mac.com.raandroid_header.constants.Constants;
 import kalpesh.mac.com.raandroid_header.model.Example;
 import kalpesh.mac.com.raandroid_header.model.Restaurant;
@@ -44,25 +52,26 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class MainActivity extends ListActivity implements
+public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     //Composite Subscription
     private IRestaurant _api;
     private List<Restaurant> mRestaurantList;
+    private RecyclerView mRecyclerView;
 
-    //    private RecyclerView mRecyclerView;
-    private Adapter mAdapter;
+    private RecyAdapter mAdapter;
     private ProgressDialog pDialog;
     private String pcode = "E14";
     private EditText search;
     private ImageButton myLoc;
+    private ListView list;
     private Button go;
     private Button maps;
     protected GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
     private boolean first;
-//    Toolbar toolbar;
+    Toolbar toolbar;
 
     /**
      * Subscription that represents a group of Subscriptions that are unsubscribed together.
@@ -78,9 +87,15 @@ public class MainActivity extends ListActivity implements
         myLoc = (ImageButton) findViewById(R.id.go);
         go = (Button) findViewById(R.id.submit_area);
         maps = (Button) findViewById(R.id.show_maps);
+        list =(ListView)findViewById(R.id.the_list);
+        mRecyclerView=(RecyclerView) findViewById(R.id.recy_view);
         mResultReceiver = new AddressResultReceiver(new Handler());
-//        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
         buildGoogleApiClient();
+
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getBaseContext()));
 
 /**
  * Retrofit 1.9
@@ -115,10 +130,18 @@ public class MainActivity extends ListActivity implements
             @Override
             public void onClick(View v) {
                 if(mRestaurantList!=null){
+                    Bundle b= new Bundle();
                     Intent maps = new Intent(MainActivity.this, MapsActivity.class);
-                    startActivity(maps);}
+                    for (Restaurant r:mRestaurantList) {
+                        b.putSerializable(r.getName(),r);
+
+                    }
+                    maps.putExtra("pachet",b);
+                    startActivity(maps);
+                }
             }
         });
+
 
     }
 
@@ -187,9 +210,9 @@ public class MainActivity extends ListActivity implements
                     public void onNext(Example example) {
                         mRestaurantList = example.getRestaurants();
                         System.out.println("Got: " + " (" + Thread.currentThread().getName() + ")");
-                        mAdapter = new Adapter(getApplicationContext(), R.layout.row, mRestaurantList);
+                        mAdapter = new RecyAdapter(mRestaurantList, R.layout.row,  getApplicationContext());
                         Log.i("DATA IS", "" + mRestaurantList);
-                        setListAdapter(mAdapter);
+                        mRecyclerView.setAdapter(mAdapter);
                     }
                 }));
     }
@@ -200,7 +223,7 @@ public class MainActivity extends ListActivity implements
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        Toast.makeText(this.getBaseContext(),"BOOP",Toast.LENGTH_SHORT).show();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;

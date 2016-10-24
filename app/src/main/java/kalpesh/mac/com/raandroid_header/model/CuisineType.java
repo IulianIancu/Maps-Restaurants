@@ -5,8 +5,10 @@ package kalpesh.mac.com.raandroid_header.model;
  */
 import com.google.gson.annotations.Expose;
 
+import java.io.Serializable;
 
-public class CuisineType {
+
+public class CuisineType implements Serializable {
 
     @Expose
     private Integer Id;
